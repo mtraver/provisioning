@@ -1,0 +1,95 @@
+[ ca ]
+default_ca = CA_default
+
+############################################################
+[ CA_default ]
+dir = ./ca
+crldir = $dir/crl
+
+# CA private key and cert
+certificate = $dir/ca.x509
+private_key = $dir/private/ca.pem
+RANDFILE = $dir/private/.rand
+
+# Where certs are stored
+certs = $dir/certs
+new_certs_dir = $dir/certs
+
+serial = $dir/ca.srl
+
+database = $dir/index.txt
+
+crlnumber = $crldir/crlnumber
+crl = $crldir/ca.crl.pem
+
+default_md = sha256
+preserve = no  # Don't preserve DN order
+
+default_days    = 1095  # 3 years
+x509_extensions = usr_cert
+
+policy = policy_match
+
+############################################################
+[ policy_match ]
+countryName             = match
+stateOrProvinceName     = match
+organizationName        = match
+organizationalUnitName  = optional
+commonName              = supplied
+emailAddress            = optional
+
+############################################################
+[ req ]
+distinguished_name      = req_distinguished_name
+
+# The extentions to add to self-signed certs
+x509_extensions = v3_ca
+
+# This sets a mask for permitted string types. There are several options.
+# default: PrintableString, T61String, BMPString.
+# pkix   : PrintableString, BMPString (PKIX recommendation before 2004)
+# utf8only: only UTF8Strings (PKIX recommendation after 2004).
+# nombstr : PrintableString, T61String (no BMPStrings or UTF8Strings).
+# MASK:XXXX a literal mask value.
+# WARNING: ancient versions of Netscape crash on BMPStrings or UTF8Strings.
+string_mask = utf8only
+
+############################################################
+[ req_distinguished_name ]
+countryName                 = Country Name (2 letter code)
+countryName_default         = US
+countryName_min             = 2
+countryName_max             = 2
+
+stateOrProvinceName         = State or Province Name (full name)
+stateOrProvinceName_default = California
+
+localityName                = Locality Name (e.g. city)
+
+0.organizationName          = Organization Name (e.g. company)
+
+organizationalUnitName      = Organizational Unit Name (e.g. section)
+
+commonName                  = Common Name (e.g. server FQDN or YOUR name)
+commonName_max              = 64
+
+emailAddress                = Email Address
+emailAddress_max            = 64
+
+############################################################
+# Extensions to add to CA certs
+[ v3_ca ]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer:always
+basicConstraints = critical,CA:true
+keyUsage = critical,cRLSign,keyCertSign
+
+############################################################
+# Extensions to add to normal certs
+[ usr_cert ]
+basicConstraints = CA:false
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer
+keyUsage = digitalSignature
+extendedKeyUsage = clientAuth

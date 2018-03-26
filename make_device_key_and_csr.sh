@@ -14,8 +14,9 @@ readonly device_id="$1"
 readonly out_dir="$2"
 
 # Validate device ID
-if [[ ! "$device_id" =~ ^[a-zA-Z0-9_-]+$ ]]; then
-  echo "Device ID may contain only letters, numbers, dash, and underscore."
+if [[ ! "$device_id" =~ ^[a-z][a-z0-9+.%~_-]{2,254}$ ]]; then
+  echo "Device ID must be 3-255 chars long, start with a letter, and contain"
+  echo "only lowercase letters, numbers, and these characters: - + . % _ ~"
   exit 1
 fi
 

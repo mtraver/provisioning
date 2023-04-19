@@ -21,7 +21,7 @@ readonly cert_file="${out_dir}/ca.x509"
 openssl genrsa -aes256 -out "${key_file}" 4096
 
 # Make the CA's self-signed cert
-openssl req -config openssl.cnf -new -x509 -sha256 -days 1825 \
+openssl req -config openssl.cnf -new -x509 -sha256 -days 365000 \
   -extensions v3_ca -key "$key_file" -out "$cert_file"
 
 chmod 400 "$key_file" "$cert_file"
